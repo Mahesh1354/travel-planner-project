@@ -1,5 +1,4 @@
 package com.travelplanner.backend.service.impl;
-package com.travelplanner.service.impl;
 
 import com.travelplanner.backend.dto.RegisterRequest;
 import com.travelplanner.backend.dto.LoginRequest;
