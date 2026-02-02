@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Nomad | Travel Planner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <h1>🌍 Global Nomad</h1>
+    </nav>
+
+    <main>
+        <section id="planner-form">
+            <h2>Plan a New Adventure</h2>
+            <form id="tripForm">
+                <input type="text" id="dest-input" placeholder="Where to? (e.g., Tokyo)" required>
+                <input type="date" id="date-input" required>
+                <input type="number" id="budget-input" placeholder="Budget ($)" required>
+                <button type="submit" id="add-trip-btn">Add to Itinerary</button>
+            </form>
+        </section>
+
+        <section id="budget-overview" class="stats-container">
+            <p>Total Trips: <span id="trip-count">0</span></p>
+            <p>Total Budget: $<span id="total-budget-sum">0</span></p>
+        </section>
+
+        <section id="itinerary-list">
+            <h2>Your Trips</h2>
+            <div id="tripsContainer"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
