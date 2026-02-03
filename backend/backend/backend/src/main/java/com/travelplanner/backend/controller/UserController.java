@@ -1,10 +1,11 @@
 package com.travelplanner.backend.controller;
-import com.travelplanner.dto.ApiResponse;
+
+import com.travelplanner.backend.dto.ApiResponse;
 import com.travelplanner.backend.dto.AuthResponse;
 import com.travelplanner.backend.dto.LoginRequest;
 import com.travelplanner.backend.dto.RegisterRequest;
 import com.travelplanner.backend.dto.UserResponse;
-import com.travelplanner.backend.entity.User;
+import com.travelplanner.backend.service.JwtService;
 import com.travelplanner.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtService jwtService;
+
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             UserResponse userResponse = userService.register(registerRequest);
 
-            // For now, return user without token (JWT will be added later)
             ApiResponse response = ApiResponse.success(
                     "Registration successful. Please login.",
                     userResponse
@@ -41,16 +44,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
-            User user = userService.authenticate(loginRequest);
-
-            // Convert user to response DTO
-            UserResponse userResponse = new UserResponse(user);
-
-            // Create auth response (without JWT token for now)
-            AuthResponse authResponse = new AuthResponse(
-                    "token_will_be_implemented_later", // Placeholder
-                    userResponse
-            );
+            AuthResponse authResponse = userService.authenticate(loginRequest);
 
             ApiResponse response = ApiResponse.success(
                     "Login successful",
@@ -79,9 +73,14 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/profile/{email}")
-    public ResponseEntity<ApiResponse> getUserProfile(@PathVariable String email) {
+    @GetMapping("/profile")
+    public ResponseEntity<ApiResponse> getCurrentUserProfile(
+            @RequestHeader("Authorization") String authorizationHeader) {
         try {
+            // Extract token from header
+            String token = authorizationHeader.substring(7); // Remove "Bearer "
+            String email = jwtService.getEmailFromToken(token);
+
             UserResponse userResponse = userService.getUserByEmail(email);
 
             ApiResponse response = ApiResponse.success(
@@ -93,7 +92,7 @@ public class UserController {
 
         } catch (Exception e) {
             ApiResponse response = ApiResponse.error("Failed to retrieve user profile: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
 }

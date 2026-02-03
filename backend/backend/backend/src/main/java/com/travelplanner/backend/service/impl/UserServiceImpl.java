@@ -1,13 +1,15 @@
 package com.travelplanner.backend.service.impl;
 
-import com.travelplanner.backend.dto.RegisterRequest;
+import com.travelplanner.backend.dto.AuthResponse;
 import com.travelplanner.backend.dto.LoginRequest;
+import com.travelplanner.backend.dto.RegisterRequest;
 import com.travelplanner.backend.dto.UserResponse;
 import com.travelplanner.backend.entity.User;
 import com.travelplanner.backend.entity.UserType;
 import com.travelplanner.backend.exception.AuthenticationException;
 import com.travelplanner.backend.exception.UserAlreadyExistsException;
 import com.travelplanner.backend.repository.UserRepository;
+import com.travelplanner.backend.service.JwtService;
 import com.travelplanner.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Override
     public UserResponse register(RegisterRequest registerRequest) {
@@ -46,7 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User authenticate(LoginRequest loginRequest) {
+    public AuthResponse authenticate(LoginRequest loginRequest) {
         // Find user by email
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new AuthenticationException("User not found"));
@@ -61,7 +66,14 @@ public class UserServiceImpl implements UserService {
             throw new AuthenticationException("Invalid credentials");
         }
 
-        return user;
+        // Generate JWT token
+        String token = jwtService.generateToken(user);
+
+        // Convert user to response DTO
+        UserResponse userResponse = new UserResponse(user);
+
+        // Return auth response with token
+        return new AuthResponse(token, userResponse);
     }
 
     @Override

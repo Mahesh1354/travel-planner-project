@@ -1,4 +1,4 @@
-package com.travelplanner.dto;
+package com.travelplanner.backend.dto;
 
 public class ApiResponse {
     private boolean success;
