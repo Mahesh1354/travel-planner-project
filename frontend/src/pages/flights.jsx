@@ -151,7 +151,7 @@ function FlightPage() {
           box-sizing: border-box;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap');
+      
 
         body {
           font-family: 'Poppins', sans-serif;
@@ -163,7 +163,7 @@ function FlightPage() {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  padding-top: 120px;
+  padding-top: -10px;
 }
 
 
@@ -191,7 +191,7 @@ function FlightPage() {
           border-radius: 20px;
           padding: 40px;
           margin-bottom: 40px;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+          
           animation: slideDown 0.6s ease-out;
         }
 
@@ -209,7 +209,7 @@ function FlightPage() {
         .search-title {
           font-size: 2.2rem;
           font-weight: 700;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #384166 0%, #3a4872 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           margin-bottom: 30px;
@@ -235,7 +235,7 @@ function FlightPage() {
         }
 
         .trip-btn.active {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #384166 0%, #3a4872 100%);
           color: white;
           border-color: transparent;
           box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
@@ -285,7 +285,7 @@ function FlightPage() {
 
         .search-button {
           padding: 14px 40px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg,#384166 0%, #3a4872 100%);
           color: white;
           border: none;
           border-radius: 10px;
@@ -293,7 +293,7 @@ function FlightPage() {
           font-weight: 700;
           cursor: pointer;
           transition: all 0.3s ease;
-          box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+         
           width: 100%;
           align-self: flex-end;
         }
@@ -407,13 +407,13 @@ function FlightPage() {
         .flights-results {
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
         }
 
         .flight-card {
           background: white;
           border-radius: 15px;
-          padding: 20px;
+          padding: 10px;
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           cursor: pointer;
@@ -698,7 +698,7 @@ function FlightPage() {
 
       <div
       className="flight-container"
-      style={{ backgroundImage: `url(${flightBg})` }}
+      
     >
         <div className="flight-wrapper" style={{ maxWidth: '1400px', margin: '0 auto' }}>
           {/* Search Section */}
@@ -786,7 +786,7 @@ function FlightPage() {
               </div>
 
               <button type="submit" className="search-button">
-                🔍 Search Flights
+                Search Flights
               </button>
             </form>
           </div>
@@ -801,7 +801,7 @@ function FlightPage() {
               <div className="results-wrapper">
                 {/* Sidebar Filters */}
                 <div className="filters-sidebar">
-                  <div className="filter-title">🎯 Filters</div>
+                  <div className="filter-title"> Filters</div>
 
                   <div className="filter-group">
                     <label className="filter-label">Price Range</label>
@@ -844,7 +844,7 @@ function FlightPage() {
                 {/* Flight Results */}
                 <div>
                   <div className="results-header">
-                    📊 Showing {sortedFlights.length} flights
+                    Showing {sortedFlights.length} flights
                   </div>
                   <div className="flights-results">
                     {sortedFlights.map(flight => (

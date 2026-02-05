@@ -1,0 +1,407 @@
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Eye, EyeOff } from 'lucide-react';
+
+export default function RegisterPage() {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    agreeTerms: false,
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    }
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    }
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    if (!formData.agreeTerms) {
+      newErrors.agreeTerms = 'You must agree to the terms';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: '',
+      }));
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+          agreeTerms: false,
+        });
+      }, 3000);
+    }
+  };
+
+  return (
+    <>
+      <style>
+        {`
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+
+          html, body, #root {
+            width: 100%;  /* Removed height: 100% to allow scrolling */
+          }
+
+          body {
+            overflow-y: auto;  /* Explicitly allow vertical scrolling */
+          }
+
+          .register-container {
+            position: relative;  /* Changed from fixed to relative for normal flow and scrolling */
+            top: 0;  /* Reset top since it's no longer fixed */
+            left: 0;
+            width: 100%;
+            min-height: 145vh;  /* Keeps full-screen feel but allows overflow */
+            background: linear-gradient(135deg, #ced7fd 0%, #f5f3f8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1;  /* Lowered z-index since it's not fixed */
+          }
+
+          .register-wrapper {
+            width: 100%;
+            max-width: 900px;
+          }
+
+          @keyframes slideUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes pulse {
+            0%, 100% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0.7;
+            }
+          }
+
+          .register-card {
+            animation: slideUp 0.6s ease-out;
+          }
+
+          .register-form .form-control:focus {
+            border-color: #60688e;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+          }
+
+          .register-form .form-control {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+          }
+
+          .register-form .form-control:hover {
+            border-color: #343d67;
+          }
+
+          .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #667eea;
+            background: none;
+            border: none;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .password-toggle:hover {
+            color: #764ba2;
+          }
+
+          .password-wrapper {
+            position: relative;
+          }
+
+          .btn-register {
+            background: linear-gradient(135deg, #384166 0%, #3a4872 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+            color: white;
+          }
+
+          .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+            color: white;
+          }
+
+          .btn-register:active {
+            transform: translateY(0);
+          }
+
+          .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+          }
+
+          .form-check-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+          }
+
+          .invalid-feedback {
+            display: block;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            color: #dc3545;
+          }
+
+          .success-message {
+            animation: pulse 0.6s ease-in-out;
+          }
+        `}
+      </style>
+
+      <div className="register-container">
+        <div className="register-wrapper">
+          <div className="card shadow-lg border-0 register-card" style={{ borderRadius: '12px' }}>
+            <div className="card-body p-5 register-form">
+              <div className="text-center mb-4">
+                <h2 className="fw-bold text-dark mb-2">Create Account</h2>
+                <p className="text-muted mb-0">Join us today and get started</p>
+              </div>
+
+              {submitted ? (
+                <div className="alert alert-success success-message" role="alert">
+                  <div className="text-center">
+                    <h5 className="mb-2">✓ Registration Successful!</h5>
+                    <p className="mb-0 small">Welcome aboard! Redirecting...</p>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} noValidate>
+                  <div className="row mb-3">
+                    <div className="col-md-6">
+                      <label htmlFor="firstName" className="form-label fw-500 text-dark">
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
+                        id="firstName"
+                        name="firstName"
+                        placeholder="John"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                      />
+                      {errors.firstName && (
+                        <div className="invalid-feedback">{errors.firstName}</div>
+                      )}
+                    </div>
+                    <div className="col-md-6">
+                      <label htmlFor="lastName" className="form-label fw-500 text-dark">
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
+                        id="lastName"
+                        name="lastName"
+                        placeholder="Doe"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                      />
+                      {errors.lastName && (
+                        <div className="invalid-feedback">{errors.lastName}</div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="email" className="form-label fw-500 text-dark">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                      id="email"
+                      name="email"
+                      placeholder="you@example.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                    {errors.email && (
+                      <div className="invalid-feedback">{errors.email}</div>
+                    )}
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label fw-500 text-dark">
+                      Password
+                    </label>
+                    <div className="password-wrapper">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                        id="password"
+                        name="password"
+                        placeholder="At least 8 characters"
+                        value={formData.password}
+                        onChange={handleChange}
+                      />
+                      <button
+                        type="button"
+                        className="password-toggle"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                      {errors.password && (
+                        <div className="invalid-feedback">{errors.password}</div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="confirmPassword" className="form-label fw-500 text-dark">
+                      Confirm Password
+                    </label>
+                    <div className="password-wrapper">
+                      <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="Re-enter your password"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                      />
+                      <button
+                        type="button"
+                        className="password-toggle"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      >
+                        {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                      {errors.confirmPassword && (
+                        <div className="invalid-feedback">{errors.confirmPassword}</div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="agreeTerms"
+                        name="agreeTerms"
+                        checked={formData.agreeTerms}
+                        onChange={handleChange}
+                      />
+                      <label className="form-check-label text-muted" htmlFor="agreeTerms">
+                        I agree to the{' '}
+                        <a href="#" className="text-decoration-none text-primary fw-500">
+                          Terms of Service
+                        </a>{' '}
+                        and{' '}
+                        <a href="#" className="text-decoration-none text-primary fw-500">
+                          Privacy Policy
+                        </a>
+                      </label>
+                    </div>
+                    {errors.agreeTerms && (
+                      <div className="invalid-feedback d-block">{errors.agreeTerms}</div>
+                    )}
+                  </div>
+
+                  <button type="submit" className="btn btn-register w-100">
+                    Create Account
+                  </button>
+
+                  <div className="text-center mt-4">
+                    <p className="text-muted mb-0">
+                      Already have an account?{' '}
+                      <a href="/login" className="text-decoration-none text-primary fw-600">
+                        login
+                      </a>
+                    </p>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+
+          <div className="text-center mt-4">
+            
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
