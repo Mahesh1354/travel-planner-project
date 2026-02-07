@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/trips/**").authenticated()
                         .requestMatchers("/api/search/**").authenticated()
                         .requestMatchers("/api/bookings/**").authenticated()
+                        .requestMatchers("/api/recommendations/**").authenticated()
                         // Future protected endpoints will be added here
 
                         .anyRequest().authenticated()
