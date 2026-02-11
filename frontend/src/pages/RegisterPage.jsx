@@ -16,6 +16,8 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const validateForm = () => {
     const newErrors = {};
@@ -61,23 +63,56 @@ export default function RegisterPage() {
         [name]: '',
       }));
     }
+    if (apiError) {
+      setApiError('');
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          agreeTerms: false,
-        });
-      }, 3000);
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+    setApiError('');
+
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitted(true);
+        setTimeout(() => {
+          // Redirect to login
+          window.location.href = '/login';
+        }, 3000);
+      } else {
+        // Handle backend validation errors
+        if (data.errors) {
+          setErrors(data.errors);
+        }
+        setApiError(data.message || 'Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setApiError('Network error. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,25 +127,25 @@ export default function RegisterPage() {
           }
 
           html, body, #root {
-            width: 100%;  /* Removed height: 100% to allow scrolling */
+            width: 100%;
           }
 
           body {
-            overflow-y: auto;  /* Explicitly allow vertical scrolling */
+            overflow-y: auto;
           }
 
           .register-container {
-            position: relative;  /* Changed from fixed to relative for normal flow and scrolling */
-            top: 0;  /* Reset top since it's no longer fixed */
+            position: relative;
+            top: 0;
             left: 0;
             width: 100%;
-            min-height: 145vh;  /* Keeps full-screen feel but allows overflow */
+            min-height: 145vh;
             background: linear-gradient(135deg, #ced7fd 0%, #f5f3f8 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            z-index: 1;  /* Lowered z-index since it's not fixed */
+            z-index: 1;
           }
 
           .register-wrapper {
@@ -159,6 +194,11 @@ export default function RegisterPage() {
             border-color: #343d67;
           }
 
+          .register-form .form-control:disabled {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+          }
+
           .password-toggle {
             position: absolute;
             right: 12px;
@@ -176,6 +216,11 @@ export default function RegisterPage() {
 
           .password-toggle:hover {
             color: #764ba2;
+          }
+
+          .password-toggle:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
           }
 
           .password-wrapper {
@@ -204,6 +249,11 @@ export default function RegisterPage() {
             transform: translateY(0);
           }
 
+          .btn-register:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+
           .form-check-input:checked {
             background-color: #667eea;
             border-color: #667eea;
@@ -212,6 +262,11 @@ export default function RegisterPage() {
           .form-check-input:focus {
             border-color: #667eea;
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+          }
+
+          .form-check-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
           }
 
           .invalid-feedback {
@@ -223,6 +278,17 @@ export default function RegisterPage() {
 
           .success-message {
             animation: pulse 0.6s ease-in-out;
+          }
+
+          .api-error {
+            display: block;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            color: #721c24;
+            font-size: 0.9rem;
           }
         `}
       </style>
@@ -240,11 +306,17 @@ export default function RegisterPage() {
                 <div className="alert alert-success success-message" role="alert">
                   <div className="text-center">
                     <h5 className="mb-2">✓ Registration Successful!</h5>
-                    <p className="mb-0 small">Welcome aboard! Redirecting...</p>
+                    <p className="mb-0 small">Welcome aboard! Redirecting to login...</p>
                   </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} noValidate>
+                  {apiError && (
+                    <div className="api-error">
+                      {apiError}
+                    </div>
+                  )}
+
                   <div className="row mb-3">
                     <div className="col-md-6">
                       <label htmlFor="firstName" className="form-label fw-500 text-dark">
@@ -258,6 +330,7 @@ export default function RegisterPage() {
                         placeholder="John"
                         value={formData.firstName}
                         onChange={handleChange}
+                        disabled={loading}
                       />
                       {errors.firstName && (
                         <div className="invalid-feedback">{errors.firstName}</div>
@@ -275,6 +348,7 @@ export default function RegisterPage() {
                         placeholder="Doe"
                         value={formData.lastName}
                         onChange={handleChange}
+                        disabled={loading}
                       />
                       {errors.lastName && (
                         <div className="invalid-feedback">{errors.lastName}</div>
@@ -294,6 +368,7 @@ export default function RegisterPage() {
                       placeholder="you@example.com"
                       value={formData.email}
                       onChange={handleChange}
+                      disabled={loading}
                     />
                     {errors.email && (
                       <div className="invalid-feedback">{errors.email}</div>
@@ -313,11 +388,13 @@ export default function RegisterPage() {
                         placeholder="At least 8 characters"
                         value={formData.password}
                         onChange={handleChange}
+                        disabled={loading}
                       />
                       <button
                         type="button"
                         className="password-toggle"
                         onClick={() => setShowPassword(!showPassword)}
+                        disabled={loading}
                       >
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                       </button>
@@ -340,11 +417,13 @@ export default function RegisterPage() {
                         placeholder="Re-enter your password"
                         value={formData.confirmPassword}
                         onChange={handleChange}
+                        disabled={loading}
                       />
                       <button
                         type="button"
                         className="password-toggle"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        disabled={loading}
                       >
                         {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                       </button>
@@ -363,6 +442,7 @@ export default function RegisterPage() {
                         name="agreeTerms"
                         checked={formData.agreeTerms}
                         onChange={handleChange}
+                        disabled={loading}
                       />
                       <label className="form-check-label text-muted" htmlFor="agreeTerms">
                         I agree to the{' '}
@@ -380,8 +460,12 @@ export default function RegisterPage() {
                     )}
                   </div>
 
-                  <button type="submit" className="btn btn-register w-100">
-                    Create Account
+                  <button 
+                    type="submit" 
+                    className="btn btn-register w-100"
+                    disabled={loading}
+                  >
+                    {loading ? 'Creating Account...' : 'Create Account'}
                   </button>
 
                   <div className="text-center mt-4">

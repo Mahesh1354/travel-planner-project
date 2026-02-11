@@ -31,7 +31,7 @@ public class TripController {
 
     // Trip CRUD operations
     @PostMapping
-    public ResponseEntity<ApiResponse> createTrip(
+    public ResponseEntity<Object> createTrip(
             @RequestHeader("Authorization") String authorizationHeader,
             @Valid @RequestBody TripRequest tripRequest) {
 

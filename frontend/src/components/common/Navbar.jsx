@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from "../../assets/image.png";
+import logo from "../../assets/travel.jpg";
 
 function Navbar() {
   return (
@@ -70,7 +70,7 @@ function Navbar() {
       <nav className="navbar navbar-expand-lg navbar-light py-2">
         <div className="container-fluid">
           <Link className="navbar-brand d-flex align-items-center" to="/">
-            <img src={logo} alt="Logo" className="me-2" style={{ height: "55px" }} />
+            <img src={logo} alt="Logo" className="me-2" style={{ height: "55px", width: "100px"}} />
           </Link>
 
           <button
@@ -97,7 +97,7 @@ function Navbar() {
               </li>
 
               <li className="nav-item">
-                <a className="nav-link d-flex flex-column align-items-center" href="#hotels">
+                <a className="nav-link d-flex flex-column align-items-center" href="/hotels">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-buildings mb-1" viewBox="0 0 16 16">
                     <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z" />
                     <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z" />
@@ -107,7 +107,7 @@ function Navbar() {
               </li>
 
               <li className="nav-item">
-                <a className="nav-link d-flex flex-column align-items-center" href="#packages">
+                <a className="nav-link d-flex flex-column align-items-center" href="/packages">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-box mb-1" viewBox="0 0 16 16">
                     <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
                   </svg>
@@ -116,7 +116,7 @@ function Navbar() {
               </li>
 
               <li className="nav-item">
-                <a className="nav-link d-flex flex-column align-items-center" href="#trains">
+                <a className="nav-link d-flex flex-column align-items-center" href="/trains">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mb-1">
                     <rect x="7" y="5" width="10" height="14" rx="1"></rect>
                     <path d="M7 11h10"></path>
@@ -170,7 +170,7 @@ function Navbar() {
               <li className="nav-item"><a className="nav-link" href="#budget">Budget</a></li>
               <li className="nav-item"><a className="nav-link" href="#recommendations">Recommendations</a></li>
               <li className="nav-item"><a className="nav-link" href="#alerts">Alerts</a></li>
-              <li className="nav-item"><Link className="nav-link" to="/register">Login</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/login">Login</Link></li>
             </ul>
           </div>
         </div>

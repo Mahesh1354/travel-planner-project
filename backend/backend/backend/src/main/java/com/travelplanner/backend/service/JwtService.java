@@ -1,73 +1,52 @@
-    package com.travelplanner.backend.service;
+package com.travelplanner.backend.service;
 
+import com.travelplanner.backend.entity.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Service;
 
+import java.security.Key;
+import java.util.Date;
 
-    import com.travelplanner.backend.config.JwtProperties;
-    import com.travelplanner.backend.entity.User;
-    import io.jsonwebtoken.Claims;
-    import io.jsonwebtoken.Jwts;
-    import io.jsonwebtoken.SignatureAlgorithm;
-    import io.jsonwebtoken.security.Keys;
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.stereotype.Service;
+@Service
+public class JwtService {
 
-    import java.security.Key;
-    import java.util.Date;
+    private final String SECRET = "mySecretKeyForTravelPlannerApplication123456789";
 
-    @Service
-    public class JwtService {
-
-        @Autowired
-        private JwtProperties jwtProperties;
-
-        private Key getSigningKey() {
-            byte[] keyBytes = jwtProperties.getSecretKey().getBytes();
-            return Keys.hmacShaKeyFor(keyBytes);
-        }
-
-        public String generateToken(User user) {
-            Date now = new Date();
-            Date expiryDate = new Date(now.getTime() + jwtProperties.getExpirationMs());
-
-            return Jwts.builder()
-                    .setSubject(user.getEmail())
-                    .claim("userId", user.getId())
-                    .claim("userType", user.getUserType().name())
-                    .claim("fullName", user.getFullName())
-                    .setIssuer(jwtProperties.getIssuer())
-                    .setIssuedAt(now)
-                    .setExpiration(expiryDate)
-                    .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                    .compact();
-        }
-
-        public String getEmailFromToken(String token) {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            return claims.getSubject();
-        }
-
-        public boolean validateToken(String token) {
-            try {
-                Jwts.parserBuilder()
-                        .setSigningKey(getSigningKey())
-                        .build()
-                        .parseClaimsJws(token);
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
-        }
-
-        public Claims getClaimsFromToken(String token) {
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        }
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
+
+    public String generateToken(User user) {
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("role", user.getUserType().name())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24 hours
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String extractEmail(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public boolean isTokenValid(String token, String email) {
+        return extractEmail(token).equals(email);
+    }
+
+	public String getEmailFromToken(String token) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

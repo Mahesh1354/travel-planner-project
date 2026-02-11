@@ -1,4 +1,5 @@
 package com.travelplanner.backend.dto;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -16,4 +17,9 @@ public class LoginRequest {
 
     @NotBlank(message = "Password is required")
     private String password;
+
+	public CharSequence getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

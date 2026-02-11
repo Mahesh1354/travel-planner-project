@@ -78,7 +78,7 @@ const Link = styled.a`
   transition: color 0.3s;
 
   &:hover {
-    color: #ffffff;
+    color: #000000;
   }
 
   @media (max-width: 768px) {
@@ -128,7 +128,7 @@ const Divider = styled.div`
 const Bottom = styled.div`
   text-align: center;
   font-size: 14px;
-  color: #888;
+  color: #010101;
 
   @media (max-width: 768px) {
     font-size: 12px;

@@ -6,6 +6,9 @@ import Home from './pages/home.jsx'
 import FlightPage from './pages/flights.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
+import HotelsPage from './pages/hotel.jsx'
+import TravelPackages from './pages/packages.jsx'
+import TrainsPage from './pages/trains.jsx'
 
 function App() {
   return (
@@ -23,7 +26,8 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/flights" element={<FlightPage />} />
                   <Route path="/hotels" element={<HotelsPage />} />
-                  <Route path="/packages" element={<PackagesPage />} />
+                  <Route path="/trains" element={<TrainsPage />} />
+                  <Route path="/packages" element={<TravelPackages />} />
                   <Route path="/activities" element={<ActivitiesPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
@@ -36,16 +40,7 @@ function App() {
   )
 }
 
-function HotelsPage() {
-  return (
-    <div className="d-flex align-items-center justify-content-center vh-100" style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)' }}>
-      <div className="text-center">
-        <h1 style={{ fontSize: '3rem', color: '#1e3a8a', marginBottom: '1rem' }}>🏨 Hotels</h1>
-        <p style={{ fontSize: '1.2rem', color: '#666' }}>Hotels Page Coming Soon</p>
-      </div>
-    </div>
-  )
-}
+
 
 function PackagesPage() {
   return (

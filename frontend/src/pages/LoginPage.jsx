@@ -11,6 +11,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const validateForm = () => {
     const newErrors = {};
@@ -40,19 +42,52 @@ export default function LoginPage() {
         [name]: '',
       }));
     }
+    if (apiError) {
+      setApiError('');
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-        setFormData({
-          email: '',
-          password: '',
-        });
-      }, 3000);
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+    setApiError('');
+
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Store user data and token in localStorage
+        localStorage.setItem('user', JSON.stringify(data.data));
+        
+        setSubmitted(true);
+        setTimeout(() => {
+          // Redirect to dashboard or home
+          window.location.href = '/dashboard';
+        }, 3000);
+      } else {
+        setApiError(data.message || 'Login failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setApiError('Network error. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -91,7 +126,7 @@ export default function LoginPage() {
 
           .login-wrapper {
             width: 100%;
-            max-width: 500px;  /* Smaller than register for a compact login form */
+            max-width: 500px;
           }
 
           @keyframes slideUp {
@@ -180,6 +215,11 @@ export default function LoginPage() {
             transform: translateY(0);
           }
 
+          .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+
           .invalid-feedback {
             display: block;
             font-size: 0.85rem;
@@ -189,6 +229,17 @@ export default function LoginPage() {
 
           .success-message {
             animation: pulse 0.6s ease-in-out;
+          }
+
+          .api-error {
+            display: block;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            color: #721c24;
+            font-size: 0.9rem;
           }
         `}
       </style>
@@ -211,6 +262,12 @@ export default function LoginPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} noValidate>
+                  {apiError && (
+                    <div className="api-error">
+                      {apiError}
+                    </div>
+                  )}
+
                   <div className="mb-3">
                     <label htmlFor="email" className="form-label fw-500 text-dark">
                       Email Address
@@ -223,6 +280,7 @@ export default function LoginPage() {
                       placeholder="you@example.com"
                       value={formData.email}
                       onChange={handleChange}
+                      disabled={loading}
                     />
                     {errors.email && (
                       <div className="invalid-feedback">{errors.email}</div>
@@ -242,11 +300,13 @@ export default function LoginPage() {
                         placeholder="Enter your password"
                         value={formData.password}
                         onChange={handleChange}
+                        disabled={loading}
                       />
                       <button
                         type="button"
                         className="password-toggle"
                         onClick={() => setShowPassword(!showPassword)}
+                        disabled={loading}
                       >
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                       </button>
@@ -262,14 +322,18 @@ export default function LoginPage() {
                     </a>
                   </div>
 
-                  <button type="submit" className="btn btn-login w-100">
-                    Login
+                  <button 
+                    type="submit" 
+                    className="btn btn-login w-100"
+                    disabled={loading}
+                  >
+                    {loading ? 'Logging in...' : 'Login'}
                   </button>
 
                   <div className="text-center mt-4">
                     <p className="text-muted mb-0">
                       Don't have an account?{' '}
-                      <a href="#" className="text-decoration-none text-primary fw-600">
+                      <a href="/register" className="text-decoration-none text-primary fw-600">
                         Register
                       </a>
                     </p>

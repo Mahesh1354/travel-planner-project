@@ -1,50 +1,38 @@
 package com.travelplanner.backend.dto;
 
-public class ApiResponse {
+import lombok.*;
+
+import java.util.List;
+import java.util.Map;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ApiResponse<T> {
+
     private boolean success;
     private String message;
-    private Object data;
-
-    // Constructors
-    public ApiResponse() {}
-
-    public ApiResponse(boolean success, String message, Object data) {
-        this.success = success;
-        this.message = message;
-        this.data = data;
-    }
-
-    // Getters and Setters
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    // Static factory methods
-    public static ApiResponse success(String message, Object data) {
-        return new ApiResponse(true, message, data);
-    }
-
-    public static ApiResponse error(String message) {
-        return new ApiResponse(false, message, null);
-    }
+    private T data;
+    private Map<String, String> errors;
+	public static ApiResponse success(String string, UserResponse userResponse) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public static ApiResponse error(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public static ApiResponse success(String string, boolean b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public static ApiResponse success(String string, AuthResponse authResponse) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public static Object success(String string, TripResponse tripResponse) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
