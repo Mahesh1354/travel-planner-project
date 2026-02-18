@@ -20,5 +20,5 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     List<Trip> findByDestinationContainingIgnoreCase(String destination);
 
     // Find public trips
-    List<Trip> findByIsPublicTrue();
+    List<Trip> findByPublicTripTrue();
 }

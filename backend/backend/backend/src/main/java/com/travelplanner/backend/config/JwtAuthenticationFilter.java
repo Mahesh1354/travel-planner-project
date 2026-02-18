@@ -4,7 +4,8 @@ import com.travelplanner.backend.service.CustomUserDetailsService;
 import com.travelplanner.backend.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,27 +40,46 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
         String email = jwtService.extractEmail(token);
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            var userDetails = userDetailsService.loadUserByUsername(email);
-
-            if (jwtService.isTokenValid(token, userDetails.getUsername())) {
-
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
-
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        try {
+            // First validate the token structure and signature
+            if (!jwtService.validateToken(token)) {
+                // Token is invalid or blacklisted
+                sendErrorResponse(response, "Invalid or expired token");
+                return;
             }
-        }
 
-        filterChain.doFilter(request, response);
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                var userDetails = userDetailsService.loadUserByUsername(email);
+
+                if (jwtService.isTokenValid(token, userDetails.getUsername())) {
+                    // Create authentication token
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    // Set authentication in context
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
+
+            // Continue with the filter chain
+            filterChain.doFilter(request, response);
+
+        } catch (Exception e) {
+            // Token validation failed
+            sendErrorResponse(response, "Authentication failed: " + e.getMessage());
+        }
+    }
+
+    private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write(
+                String.format("{\"success\":false,\"message\":\"%s\"}", message)
+        );
     }
 }

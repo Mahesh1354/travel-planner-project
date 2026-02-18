@@ -30,5 +30,5 @@ public class TripRequest {
 
     private String notes;
 
-    private boolean isPublic = false;
+    private boolean isPublic;
 }
