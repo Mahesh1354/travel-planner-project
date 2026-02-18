@@ -19,7 +19,7 @@ public class ItineraryItem {
 
     private String description;
 
-    private LocalDate itemDate;
+    private LocalDateTime itemDate;
 
     private String location;
 

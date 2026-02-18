@@ -1,5 +1,7 @@
 package com.travelplanner.backend.config;
+
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -7,7 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "jwt")
 public class JwtProperties {
-    private String secretKey = "your-secret-key-for-travel-planner-application-2026-encryption";
+    @Value("${jwt.secret-key}")
+    private String secretKey = "${JWT_SECRET_KEY:}";
     private long expirationMs = 86400000; // 24 hours in milliseconds
     private String issuer = "travel-planner-app";
 }

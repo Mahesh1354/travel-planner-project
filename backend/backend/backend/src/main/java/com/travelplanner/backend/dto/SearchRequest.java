@@ -48,6 +48,25 @@ public class SearchRequest {
 
     private Integer maxPrice;
 
+    // ✅ ADD THESE MISSING FIELDS FOR HOTEL SEARCH
+    private String hotelName;           // Specific hotel name to search
+
+    private String amenities;          // Comma-separated amenities (WI-FI, POOL, PARKING)
+
+    private Integer limit = 20;        // Max results to return
+
+    private String currency = "USD";   // Currency for pricing
+
+    private String checkInTime;        // Preferred check-in time
+
+    private String checkOutTime;       // Preferred check-out time
+
     // Activity specific
     private String activityType; // adventure, cultural, food, etc.
+
+    private Integer duration;   // Activity duration in hours
+
+    private String language;    // Guide language
+
+    private Integer maxParticipants; // Max group size
 }
