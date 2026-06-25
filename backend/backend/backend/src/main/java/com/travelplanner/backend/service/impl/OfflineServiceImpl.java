@@ -485,7 +485,7 @@ public class OfflineServiceImpl implements OfflineService {
         tripData.put("destination", trip.getDestination());
         tripData.put("budget", trip.getBudget());
         tripData.put("notes", trip.getNotes());
-        tripData.put("isPublic", trip.isPublic());
+        tripData.put("isPublic", trip.isPublicTrip());
         tripData.put("createdAt", trip.getCreatedAt());
 
         if (includeRelated) {

@@ -1,7 +1,7 @@
 package com.travelplanner.backend.service;
 
-
 import com.travelplanner.backend.dto.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -13,7 +13,14 @@ public interface BookingService {
     // Booking operations
     BookingResponse createBooking(BookingRequest bookingRequest, String userEmail);
     BookingResponse getBooking(Long bookingId, String userEmail);
+
+    // Paginated methods
+    PageResponse<BookingResponse> getUserBookings(String userEmail, int page, int size, String sortBy, String sortDirection);
+    PageResponse<BookingResponse> getUserBookings(String userEmail, Pageable pageable);
+
+    // Non-paginated method
     List<BookingResponse> getUserBookings(String userEmail);
+
     List<BookingResponse> getTripBookings(Long tripId, String userEmail);
     BookingResponse cancelBooking(Long bookingId, String userEmail);
 
@@ -22,12 +29,4 @@ public interface BookingService {
                               String preferenceKey, String preferenceValue, Integer priority);
     List<SearchPreferenceDto> getUserSearchPreferences(String userEmail, String preferenceType);
     void deleteSearchPreference(Long preferenceId, String userEmail);
-
-    // Mock data generation
-    List<SearchResult> getMockFlights(String origin, String destination,
-                                      String startDate, String cabinClass);
-    List<SearchResult> getMockHotels(String location, String startDate,
-                                     String endDate, Integer minRating);
-    List<SearchResult> getMockActivities(String location, String startDate,
-                                         String activityType);
 }

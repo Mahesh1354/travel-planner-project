@@ -47,7 +47,7 @@ public class Trip {
     private String notes;
 
     @Column(name = "is_public")
-    private boolean isPublic = false;
+    private boolean publicTrip;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

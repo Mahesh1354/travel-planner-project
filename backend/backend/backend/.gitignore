@@ -1,33 +1,137 @@
-HELP.md
-target/
+##################################
+# Build / Compiled Output
+##################################
+/target/
+/build/
+**/target/
+
+##################################
+# Maven Wrapper
+##################################
 .mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+.mvn/wrapper/maven-wrapper.properties
+mvnw
+mvnw.cmd
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+##################################
+# Logs
+##################################
+logs/
+*.log
+*.gz
+*.zip
 
-### IntelliJ IDEA ###
-.idea
+##################################
+# Spring Boot Config (IMPORTANT)
+##################################
+# Commit these (NO secrets inside):
+# - application.properties
+# - application-dev.properties
+# - application-test.properties
+
+# Ignore ONLY production configs
+application-prod.properties
+application-prod.yml
+
+# Keystores / certificates
+*.p12
+*.jks
+
+##################################
+# Environment Variables (SECRETS)
+##################################
+.env
+.env.local
+.env.*.local
+
+##################################
+# IDE - IntelliJ IDEA
+##################################
+.idea/
 *.iws
 *.iml
 *.ipr
+out/
 
-### NetBeans ###
+##################################
+# IDE - Eclipse / STS
+##################################
+.classpath
+.project
+.settings/
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
+bin/
+
+##################################
+# IDE - VS Code
+##################################
+.vscode/
+*.code-workspace
+
+##################################
+# IDE - NetBeans
+##################################
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+##################################
+# OS Generated Files
+##################################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+##################################
+# Test Reports
+##################################
+test-output/
+*.tap
+*.xml
+*.html
+
+##################################
+# Database Dumps
+##################################
+*.sql
+*.dump
+
+##################################
+# Uploaded / Temp Files
+##################################
+uploads/
+temp/
+
+##################################
+# Frontend (React)
+##################################
+node_modules/
+package-lock.json
+yarn.lock
+
+##################################
+# Docker
+##################################
+docker-compose.override.yml
+*.pid
+
+##################################
+# JVM / Heap Dumps
+##################################
+*.hprof
+
+##################################
+# Sensitive Directories
+##################################
+**/secrets/
+**/private/
